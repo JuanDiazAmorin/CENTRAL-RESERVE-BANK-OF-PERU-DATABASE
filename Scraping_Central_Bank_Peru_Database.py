@@ -40,7 +40,6 @@ table = pd.DataFrame({
 
 table.head()
 
-
 ##
 # MONTHLY, QUARTERLY OR ANNUAL VARIABLES
 ##
