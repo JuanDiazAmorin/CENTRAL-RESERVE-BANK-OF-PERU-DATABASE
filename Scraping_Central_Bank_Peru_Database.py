@@ -9,7 +9,6 @@ import requests
 import pandas as pd
 import numpy as np
 
-
 ##CHANGE THE FOLLOWING  LINK ACCORDING TO USER NEEDS. 
 link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales/mercado-inmobiliario'
 
