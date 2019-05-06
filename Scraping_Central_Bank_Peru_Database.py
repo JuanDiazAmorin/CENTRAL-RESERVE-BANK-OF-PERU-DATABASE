@@ -11,8 +11,17 @@ import requests
 import pandas as pd
 import numpy as np
 
-##CHANGE THE FOLLOWING  LINK ACCORDING TO USER NEEDS. 
-link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales/mercado-inmobiliario'
+
+#Quarterly data
+#link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales'
+
+#Monthly Data
+link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/mensuales'
+
+#Annual Data
+#link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/anuales'
+
+#Change this link according the user preference. 
 
 page = requests.get(link, verify=False)
 content = BeautifulSoup(page.content, 'html.parser')
@@ -40,6 +49,7 @@ table = pd.DataFrame({
         "end" : end})
 
 table.head()
+
 
 ##
 # MONTHLY, QUARTERLY OR ANNUAL VARIABLES
