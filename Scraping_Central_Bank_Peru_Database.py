@@ -4,14 +4,12 @@
 #
 ######################################################
 
-# AUTHOR: JUAN DIAZ AMORIN
-
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-import numpy as np
+import time
 
-
+start = time.time()
 #Quarterly data
 #link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales'
 
@@ -20,6 +18,7 @@ link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/mensuales'
 
 #Annual Data
 #link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/anuales'
+
 
 #Change this link according the user preference. 
 
@@ -48,7 +47,6 @@ table = pd.DataFrame({
         "start" : start,
         "end" : end})
 
-table.head()
 
 
 ##
@@ -105,16 +103,18 @@ for x in range(0, len(table)):
     name = []
     date = []
     value= []
-    for y in range(0, len(periodo)):
-        name.append(cabecera[1].get_text())
-        date.append(periodo[y].get_text().replace('\n','').replace(' ',''))
-        value.append(pd.to_numeric(dato[y].get_text().replace('\n','').replace(' ',''), errors='ignore'))
-    serie = pd.DataFrame({'name': name,
+    try:
+        for y in range(0, len(periodo)):
+            name.append(cabecera[1].get_text())
+            date.append(periodo[y].get_text().replace('\n','').replace(' ',''))
+            value.append(pd.to_numeric(dato[y].get_text().replace('\n','').replace(' ',''), errors='ignore'))
+        serie = pd.DataFrame({'name': name,
                       'date':date,
                       'value':value})
-    name_serie = str(serie['name'][0])
-    series[name_serie] = serie
- 
+        name_serie = str(serie['name'][0])
+        series[name_serie] = serie
+    except:
+        pass
 series_full = series
 names = []
 i=0
@@ -125,4 +125,7 @@ for x in series_full.keys():
     i+=1
     
 # Full variables are in dictionary 'series_full'. 
+
+end = time.time()
+print('Elapsed time:',end-start)
 
