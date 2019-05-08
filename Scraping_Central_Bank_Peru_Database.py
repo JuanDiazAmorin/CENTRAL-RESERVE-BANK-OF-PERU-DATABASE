@@ -7,20 +7,22 @@
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-import time
-
-start = time.time()
-#Quarterly data
-#link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales'
-
-#Monthly Data
-link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/mensuales'
-
-#Annual Data
-#link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/anuales'
 
 
-#Change this link according the user preference. 
+#Write one of the following options:
+# monthly
+# quarterly
+# annual
+
+x = input()
+print('Downloanding data:', x.upper())
+
+if x == 'monthly':
+    link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/mensuales'
+elif x == 'quarterly':
+    link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales'
+else:
+    link = 'https://estadisticas.bcrp.gob.pe/estadisticas/series/anuales'
 
 page = requests.get(link, verify=False)
 content = BeautifulSoup(page.content, 'html.parser')
@@ -46,8 +48,6 @@ table = pd.DataFrame({
         "names" : name,
         "start" : start,
         "end" : end})
-
-
 
 ##
 # MONTHLY, QUARTERLY OR ANNUAL VARIABLES
@@ -86,12 +86,16 @@ elif 'anuales' in link:
     table.rename(columns={'start':'start_date','end':'end_date'}, inplace=True)
         
 ##
-# DOWNLOADING
+# DOWNLOANDING
 ##
+
+total_data = pd.DataFrame(columns = ['name', 'date', 'value'] )
 
 series = {}
 
 for x in range(0, len(table)):
+    print('Total of tables: ', len(table)-1)
+    print('Downloading table: ', x)
     url = str('https://estadisticas.bcrp.gob.pe/estadisticas/series/api/') + \
     table.codes[x] + str('/') + str('html') + str('/') + table.start_date[x] + \
     str('/') + table.end_date[x]
@@ -111,21 +115,9 @@ for x in range(0, len(table)):
         serie = pd.DataFrame({'name': name,
                       'date':date,
                       'value':value})
-        name_serie = str(serie['name'][0])
-        series[name_serie] = serie
+        total_data = total_data.append(serie)
     except:
         pass
-series_full = series
-names = []
-i=0
-for x in series_full.keys():
-    y = x
-    names.append(y[y.rfind('-',0)+2:])
-    series_full[x].rename(columns={'value':names[i]}, inplace=True)
-    i+=1
-    
-# Full variables are in dictionary 'series_full'. 
-
-end = time.time()
-print('Elapsed time:',end-start)
+        
+total_data.to_csv('data_total.txt', sep = '|')
 
