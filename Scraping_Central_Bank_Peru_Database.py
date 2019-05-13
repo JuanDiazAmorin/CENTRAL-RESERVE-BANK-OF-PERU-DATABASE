@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
-
 #Write one of the following options:
 # monthly
 # quarterly
